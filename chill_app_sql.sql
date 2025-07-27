@@ -30,7 +30,7 @@ CREATE TABLE series_film (
     director VARCHAR(255),
     durasi INT,
     top_10 BOOLEAN DEFAULT FALSE,
-    rating_isi DECIMAL(3,2),
+    rating_isi VARCHAR(50),
     rating_penonton DECIMAL(3,2),
     path_gambar_hero VARCHAR(255),
     path_gambar_landscape VARCHAR(255),
