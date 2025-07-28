@@ -3,7 +3,7 @@ USE chill_app;
 
 -- tabel: users
 CREATE TABLE users (
-    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password_hash CHAR(60) NOT NULL, -- bcrypt
@@ -13,18 +13,17 @@ CREATE TABLE users (
 
 -- tabel: daftar_saya
 CREATE TABLE daftar_saya (
-    id_daftar_saya INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL UNIQUE,
-    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- tabel: series_film
 -- atribut turunan (tidak perlu disimpan sebagai field): jumlah_episode, new 
 CREATE TABLE series_film (
-    id_series_film INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     tipe ENUM('Series', 'Film') NOT NULL,
     judul VARCHAR(255) NOT NULL,
-    ringkasan TEXT,
     tanggal_keluar DATE,
     cast TEXT,
     director VARCHAR(255),
@@ -34,7 +33,8 @@ CREATE TABLE series_film (
     rating_penonton DECIMAL(3,2),
     path_gambar_hero VARCHAR(255),
     path_gambar_landscape VARCHAR(255),
-    path_gambar_portrait VARCHAR(255)
+    path_gambar_portrait VARCHAR(255),
+    ringkasan TEXT
 );
 
 -- tabel: memuat (junction-table antara daftar_saya dan series_film)
@@ -42,13 +42,13 @@ CREATE TABLE memuat (
     id_daftar_saya INT NOT NULL,
     id_series_film INT NOT NULL,
     PRIMARY KEY (id_daftar_saya, id_series_film),
-    FOREIGN KEY (id_daftar_saya) REFERENCES daftar_saya(id_daftar_saya) ON DELETE CASCADE,
-    FOREIGN KEY (id_series_film) REFERENCES series_film(id_series_film) ON DELETE CASCADE
+    FOREIGN KEY (id_daftar_saya) REFERENCES daftar_saya(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_series_film) REFERENCES series_film(id) ON DELETE CASCADE
 );
 
 -- tabel: genres
 CREATE TABLE genres (
-    id_genre INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     format_path VARCHAR(50) NOT NULL UNIQUE
 );
@@ -58,13 +58,13 @@ CREATE TABLE memiliki_genres (
     id_series_film INT NOT NULL,
     id_genre INT NOT NULL,
     PRIMARY KEY (id_series_film, id_genre),
-    FOREIGN KEY (id_series_film) REFERENCES series_film(id_series_film) ON DELETE CASCADE,
-    FOREIGN KEY (id_genre) REFERENCES genres(id_genre) ON DELETE CASCADE
+    FOREIGN KEY (id_series_film) REFERENCES series_film(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_genre) REFERENCES genres(id) ON DELETE CASCADE
 );
 
 -- tabel: episode_movie
 CREATE TABLE episode_movie (
-    id_episode_movie INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_series_film INT NOT NULL,
     no_episode INT NOT NULL,
     tanggal_keluar DATE,
@@ -76,12 +76,12 @@ CREATE TABLE episode_movie (
     path_gambar_landscape VARCHAR(255),
     path_gambar_portrait VARCHAR(255),
     UNIQUE KEY (id_series_film, no_episode),
-    FOREIGN KEY (id_series_film) REFERENCES series_film(id_series_film) ON DELETE CASCADE
+    FOREIGN KEY (id_series_film) REFERENCES series_film(id) ON DELETE CASCADE
 );
 
 -- tabel: paket
 CREATE TABLE paket (
-    id_paket INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nama_paket VARCHAR(50) NOT NULL UNIQUE,
     biaya_paket DECIMAL(6) NOT NULL,
     keuntungan TEXT
@@ -89,7 +89,7 @@ CREATE TABLE paket (
 
 -- tabel: pembayaran
 CREATE TABLE pembayaran (
-    id_pembayaran INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     metode_bayar VARCHAR(50) NOT NULL UNIQUE,
     biaya_admin DECIMAL(4) NOT NULL
 );
@@ -97,7 +97,7 @@ CREATE TABLE pembayaran (
 -- tabel: orders
 -- atribut turunan (tidak perlu disimpan sebagai field): biaya_total
 CREATE TABLE `orders` (
-    id_order INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     kode_bayar VARCHAR(50) NOT NULL UNIQUE,
     kode_voucher VARCHAR(50),
@@ -105,7 +105,7 @@ CREATE TABLE `orders` (
     id_pembayaran INT NOT NULL,
     tanggal_beli DATETIME NOT NULL,
     tanggal_bayar DATETIME,
-    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
-    FOREIGN KEY (id_paket) REFERENCES paket(id_paket),
-    FOREIGN KEY (id_pembayaran) REFERENCES pembayaran(id_pembayaran)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_paket) REFERENCES paket(id),
+    FOREIGN KEY (id_pembayaran) REFERENCES pembayaran(id)
 );
