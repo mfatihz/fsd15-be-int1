@@ -12,6 +12,8 @@ CREATE TABLE users (
 );
 
 -- tabel: daftar_saya
+-- NOTE: jika menggunakan skema di bawah ini, entitas daftar_saya dapat saja dihapus dan perannya langsung ditangani junction-table 'memuat',
+--      kecuali jika ada atribut tambahan (mis, tanggal_dibuat) atau jika per user bisa memiliki lebih dari satu daftar_saya
 CREATE TABLE daftar_saya (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL UNIQUE,
@@ -31,6 +33,7 @@ CREATE TABLE series_film (
     top_10 BOOLEAN DEFAULT FALSE,
     rating_isi VARCHAR(50),
     rating_penonton DECIMAL(3,2),
+    tanggal_ditambahkan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     path_gambar_hero VARCHAR(255),
     path_gambar_landscape VARCHAR(255),
     path_gambar_portrait VARCHAR(255),
@@ -69,12 +72,12 @@ CREATE TABLE episode_movie (
     no_episode INT NOT NULL,
     tanggal_keluar DATE,
     judul VARCHAR(255) NOT NULL,
-    ringkasan TEXT,
     durasi INT,
     tanggal_ditambahkan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     path_gambar_hero VARCHAR(255),
     path_gambar_landscape VARCHAR(255),
     path_gambar_portrait VARCHAR(255),
+    ringkasan TEXT,
     UNIQUE KEY (id_series_film, no_episode),
     FOREIGN KEY (id_series_film) REFERENCES series_film(id) ON DELETE CASCADE
 );
@@ -95,7 +98,7 @@ CREATE TABLE pembayaran (
 );
 
 -- tabel: orders
--- atribut turunan (tidak perlu disimpan sebagai field): biaya_total
+-- atribut turunan (tidak perlu disimpan sebagai field): biaya_total, tanggal_berakhir_masa_aktif
 CREATE TABLE `orders` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
