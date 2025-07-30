@@ -86,7 +86,7 @@ CREATE TABLE episode_movie (
 CREATE TABLE paket (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nama_paket VARCHAR(50) NOT NULL UNIQUE,
-    deskripsi VARCHAR(255) NOT NULL,
+    jumlah_akun VARCHAR(255) NOT NULL,
     biaya_paket DECIMAL(6) NOT NULL,
     keuntungan TEXT
 );
