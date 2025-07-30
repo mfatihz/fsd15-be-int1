@@ -52,7 +52,7 @@ CREATE TABLE memuat (
 -- tabel: genres
 CREATE TABLE genres (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    label VARCHAR(50) NOT NULL UNIQUE,
     format_path VARCHAR(50) NOT NULL UNIQUE
 );
 
